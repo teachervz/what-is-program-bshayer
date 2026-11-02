@@ -558,7 +558,6 @@ const LESSON = {
   subject:  "المهارات الرقمية",
   grade:    "الصف الأول المتوسط",
   teacher:  "أ. بشائر العنزي",
-  school:   "مدارس مناهل البكيرية",
   // أسماء تجريبية — استبدليها بأسماء طالباتك (أو من زر ✏️ داخل العرض)
   students: ["نورة","سارة","ريم","لمى","جود","شهد","رغد","أروى","هيا","ليان","جنى","رهف","دانة","غلا","لين","مها","وعد","أسيل","ديم","تالا"]
 };
@@ -1010,7 +1009,7 @@ const RENDER = {
         <div class="term-body"><div><span class="prompt">&gt;&gt;&gt; </span><span class="js-typed"></span><span class="caret"></span></div><div class="term-out js-out">${c.output}</div></div></div>
       <h1 class="rv">${LESSON.title}</h1>
       <p class="hero-sub rv">${LESSON.subtitle}</p>
-      <div class="hero-meta rv"><span>👩‍🏫 ${LESSON.teacher}</span><span>🏫 ${LESSON.school}</span></div>
+      <div class="hero-meta rv"><span>👩‍🏫 ${LESSON.teacher}</span></div>
     </div>`;
     const typed = $('.js-typed', b), out = $('.js-out', b); let job;
     return {
