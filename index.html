@@ -112,17 +112,21 @@ h2{font-size:56px;font-weight:800;color:var(--p900);line-height:1.15}
    ⏳ العد التنازلي
    ========================================================== */
 .t-countdown .s-body,.t-attend .s-body{align-items:center;justify-content:center;text-align:center}
-.cd{display:flex;flex-direction:column;align-items:center;gap:20px}
-.cd-title{font-size:76px;font-weight:800;line-height:1.1;background:linear-gradient(135deg,var(--p800),var(--p500) 55%,var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent;padding:0 10px}
-.cd-ring{position:relative;width:380px;height:380px}
+.cd{display:flex;flex-direction:column;align-items:center;gap:18px}
+.cd-label{font-size:46px;font-weight:800;color:var(--p800)}
+.cd-ring{position:relative;width:400px;height:400px}
 .cd-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
 .cd-ring circle{fill:none;stroke-width:16}
 .cd-ring .trk{stroke:var(--p100)}
 .cd-ring .bar{stroke:var(--p600);stroke-linecap:round;transition:stroke-dashoffset 1s linear}
-.cd-num{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);font-size:110px;font-weight:700;color:var(--p800);direction:ltr}
-.cd-num.warn{color:var(--bad);animation:pulse 1s infinite}
-.cd-bar{display:flex;gap:12px;align-items:center}
-.cd-bar .btn.on{background:var(--p700);color:#fff;border-color:var(--p700)}
+.cd-num{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);font-size:190px;font-weight:700;color:var(--p800);direction:ltr}
+.cd-num.warn{color:var(--bad);animation:bump 1s infinite}
+.cd-num.go{font-family:var(--font);font-size:84px;color:var(--pink)}
+.rocket{font-size:150px;line-height:1}
+.rocket span{display:inline-block;transform:rotate(-45deg)}
+.rocket.shake{animation:shake .3s infinite}
+.rocket.launch{animation:launch 1.3s cubic-bezier(.5,0,.9,.4) forwards}
+@keyframes launch{to{transform:translateY(-1100px)}}
 
 /* ==========================================================
    🇸🇦 النشيد الوطني
@@ -628,18 +632,23 @@ const SHAPES = {
    ---------------------------------------------------------------------- */
 const SLIDES = [
 
-  /* 1) العد التنازلي قبل بدء الحصة */
-  { type:'countdown', anim:'zoom', minutes:[1,3,5], start:5 },
+  /* 1) الترحيب */
+  { type:'title', anim:'zoom',
+    code:'print("أهلًا بكنّ يا مبرمجات! 💜")',
+    output:'أهلًا بكنّ يا مبرمجات! 💜' },
 
-  /* 2) النشيد الوطني — يعمل تلقائيًا عند الوصول للشريحة (anthem.m4a بجانب هذا الملف) */
+  /* 2) عدّ تنازلي لانطلاق الصاروخ — يبدأ تلقائيًا وينتقل للشريحة التالية عند الصفر */
+  { type:'countdown', anim:'zoom', seconds:10, label:'🚀 استعدّي… الدرس على وشك الانطلاق!' },
+
+  /* 3) النشيد الوطني — يعمل تلقائيًا عند الوصول للشريحة (anthem.m4a بجانب هذا الملف) */
   { type:'anthem', anim:'fade',
     image:'flag.jpg', audio:'anthem.m4a' },
 
-  /* 3) التحضير */
+  /* 4) التحضير */
   { type:'attend', chip:'📋 تحضير', title:'التحضير', anim:'slide',
     text:'حان وقت التحضير ✍️', sub:'استعدّي… وارفعي يدكِ عند سماع اسمكِ 🙋‍♀️' },
 
-  /* 4) مراجعة الدرس السابق (دوال إكسل) */
+  /* 5) مراجعة الدرس السابق (دوال إكسل) */
   { type:'quiz', chip:'🔁 مراجعة سابقة', title:'مراجعة الدرس السابق: دوال إكسل 📊', anim:'slide',
     intro:'اختاري الدالة الصحيحة لكل سؤال 👇',
     questions:[
@@ -649,7 +658,7 @@ const SLIDES = [
       { q:'دالة تُرجع عدد الأحرف في خلية نصية:', options:['COUNT','AVERAGE','LEN','MAX'], answer:2 }
     ] },
 
-  /* 5) الأهداف */
+  /* 6) الأهداف */
   { type:'list', chip:'🎯 الأهداف', title:'أهداف درس اليوم', anim:'fade',
     intro:'في نهاية الدرس ستكونين قادرة على أن… <b>(اضغطي على الهدف عند تحقّقه ✔)</b>',
     items:[
@@ -661,7 +670,7 @@ const SLIDES = [
       { icon:'🪜', text:'ترتّبي مراحل إنشاء البرنامج.' }
     ] },
 
-  /* 6) التمهيد: ماذا تتوقعين؟ */
+  /* 7) التمهيد: ماذا تتوقعين؟ */
   { type:'predict', chip:'🤔 ماذا تتوقعين؟', title:'تمهيد: الروبوت الحائر', anim:'zoom',
     emoji:'🤖', emojiAfter:'😵‍💫', command:'اصنع لي شطيرة جبن 🥪',
     question:'أعطينا الروبوت هذا الأمر فقط… ماذا تتوقعين أن يحدث؟',
@@ -671,7 +680,7 @@ const SLIDES = [
       + '<div class="key-idea">💡 الحاسب <b>لا يتخذ القرارات بنفسه</b>، بل يتبع <b>تعليمات محددة ودقيقة جدًا</b> خطوة بخطوة.</div>'
       + '<div class="bridge-q">إذن… كيف نكتب هذه التعليمات للحاسب؟ هذا هو درسنا: <b>ما البرنامج؟</b> 💻</div>' },
 
-  /* 7) لاحظ واكتشف: ترتيب روتين الصباح */
+  /* 8) لاحظ واكتشف: ترتيب روتين الصباح */
   { type:'order', chip:'🔍 لاحظ واكتشف', title:'رتّبي روتين الصباح ⏰', anim:'slide',
     task:'نحن نتّبع قواعد منذ الصغر! اضغطي على الخطوات <b>بالترتيب الصحيح</b> كما تفعلين كل صباح:',
     flowTitle:'🔗 تسلسل الخطوات',
@@ -679,14 +688,14 @@ const SLIDES = [
             {text:'🍳 تناولي فطوركِ'}, {text:'👗 ارتدي ملابسكِ'}, {text:'🎒 اذهبي إلى المدرسة'} ],
     success:'✨ رائع! نحن نتبع خطوات مرتبة… <b>والحاسب كذلك</b> يتبع تعليمات دقيقة ومرتبة.' },
 
-  /* 8) المقطع البرمجي والمحول البرمجي */
+  /* 9) المقطع البرمجي والمحول البرمجي */
   { type:'compiler', chip:'💻 مفهوم جديد', title:'ما المقطع البرمجي؟', anim:'zoom',
     definition:'<b>المقطع البرمجي</b>: مجموعة من الأوامر المكتوبة بلغة برمجة معيّنة لتنفيذ مهمة محددة.',
     code:'print("Hi")',
     q:'🤔 لماذا لا يكتب المبرمجون برامجهم مباشرة بالأصفار والآحاد؟',
     a:'✅ لأن الكتابة بلغة الآلة (0 و 1) شبه مستحيلة! فنكتب بلغة عالية المستوى، ثم يحوّلها <b>المحول البرمجي</b> إلى لغة الآلة.' },
 
-  /* 9) بايثون */
+  /* 10) بايثون */
   { type:'cards', chip:'🐍 تعرّفي على', title:'لغة برمجة بايثون', anim:'slide', cols:3,
     lead:'<div class="py-hero"><span class="py-ico">🐍</span><div><b>Python</b><span>لغة برمجتنا الأولى… من بين مئات لغات البرمجة!</span></div></div>',
     cards:[
@@ -698,7 +707,7 @@ const SLIDES = [
       { front:'<div class="fe">🌐</div>أين تُستخدم؟', back:'في تطبيقات متنوعة<small>ألعاب، مواقع، ذكاء اصطناعي…</small>' }
     ] },
 
-  /* 10) لاحظ واكتشف: لغات مختلفة */
+  /* 11) لاحظ واكتشف: لغات مختلفة */
   { type:'langs', chip:'🔍 لاحظ واكتشف', title:'أمر واحد… بلغات مختلفة!', anim:'fade', start:1,
     langs:[
       { name:'سكراتش', icon:'🧩', file:'scratch_project', scratch:true },
@@ -711,20 +720,20 @@ const SLIDES = [
     q:'👀 كل هذه البرامج تعرض العبارة نفسها… لاحظي: أيّها أقصر وأسهل؟',
     a:'🐍 بايثون وروبي — سطر برمجي واحد فقط! واختيار لغة البرمجة يعتمد على التطبيق الذي نريد إنشاءه.' },
 
-  /* 11) سؤال */
+  /* 12) سؤال */
   { type:'mcq', chip:'❓ استراتيجية الأسئلة', title:'سؤال سريع', anim:'zoom',
     question:'ما اللغة الوحيدة التي يفهمها جهاز الحاسب مباشرة؟',
     options:[ {icon:'🐍', text:'بايثون'}, {icon:'🔢', text:'لغة الآلة (0 و 1)'}, {icon:'🧩', text:'سكراتش'}, {icon:'📖', text:'اللغة العربية'} ],
     answer:1,
     explain:'الحاسب لا يفهم إلا لغة الآلة المكوّنة من 0 و 1، لذلك نحتاج المحول البرمجي ⚙️' },
 
-  /* 12) العصف الذهني */
+  /* 13) العصف الذهني */
   { type:'brainstorm', chip:'🧠 العصف الذهني', title:'أين نجد الخوارزميات في حياتنا؟', anim:'slide',
     intro:'💡 <b>الخوارزمية</b>: قائمة تعليمات نتّبعها خطوة بخطوة لحل مشكلة معيّنة.',
     question:'أين نستخدم خوارزميات في حياتنا اليومية؟ 🤔',
     ideas:['🍳 وصفة طبخ','🗺️ اتجاهات الطريق','⏰ روتين الصباح','💧 خطوات الوضوء','🧺 تشغيل الغسالة','🧮 حل مسألة رياضيات','📱 فتح قفل الجوال','🪥 تنظيف الأسنان'] },
 
-  /* 13) المدخلات – الخوارزمية – المخرجات */
+  /* 14) المدخلات – الخوارزمية – المخرجات */
   { type:'io', chip:'🧩 مفهوم جديد', title:'مكوّنات الخوارزمية', anim:'zoom',
     definition:'كل خوارزمية تأخذ <b>مدخلات</b> وتعالجها بخطوات، لتعطينا <b>مخرجات</b>.',
     examples:[
@@ -733,7 +742,7 @@ const SLIDES = [
       { tab:'🗺️ الطريق للمتنزه', in:['📍','مكاني الحالي'], alg:['🧭','اتجاهات الطريق'], out:['🌳','الوصول للمتنزه'] }
     ] },
 
-  /* 14) فكري – زاوجي – شاركي */
+  /* 15) فكري – زاوجي – شاركي */
   { type:'tps', chip:'👭 فكّري – زاوجي – شاركي', title:'جرّبي بنفسك: خوارزمية الفطيرة', anim:'slide',
     icon:'🥞', task:'اكتبي خوارزمية (خطوات مرتبة) لإعداد <b>فطيرة محلّاة</b>.',
     phases:[
@@ -743,7 +752,7 @@ const SLIDES = [
     ],
     answer:['اجمعي المكوّنات (وإن نقص شيء فاشتريه)','اخلطي البيكنج بودر والطحين','أضيفي السكر والملح','أضيفي الحليب والبيض والزبدة المذابة','اخلطيها حتى يتجانس الخليط','ضعي الخليط في المقلاة','اطهيه دقيقتين واقلبيه حتى يصبح بنيًا من الجهتين','قدّميها مع شرابكِ المفضّل 🥞'] },
 
-  /* 15) أشكال المخطط الانسيابي */
+  /* 16) أشكال المخطط الانسيابي */
   { type:'cards', chip:'🔷 مفهوم جديد', title:'أشكال المخطط الانسيابي', anim:'zoom', cols:5,
     lead:'<div class="def">📐 <b>المخطط الانسيابي (Flowchart)</b>: رسم يمثّل الخوارزمية ويعرض خطواتها بالترتيب الصحيح باستخدام أشكال وأسهم.</div>',
     cards:[
@@ -755,14 +764,14 @@ const SLIDES = [
     ],
     note:'📌 عند الرسم تأكّدي: نقطة <b>بداية</b> ونقطة <b>نهاية</b> • الأسهم <b>لا تتقاطع</b> • تضمين <b>جميع</b> الإجراءات.' },
 
-  /* 16) سؤال بالأشكال */
+  /* 17) سؤال بالأشكال */
   { type:'mcq', chip:'❓ استراتيجية الأسئلة', title:'اختاري الشكل الصحيح', anim:'zoom',
     question:'أيّ شكل نستخدمه في المخطط الانسيابي لـ <u>اتخاذ قرار</u> (نعم / لا)؟',
     options:[ {icon:SHAPES.rect, text:'المستطيل'}, {icon:SHAPES.para, text:'متوازي الأضلاع'}, {icon:SHAPES.diamond, text:'المعيّن'}, {icon:SHAPES.oval, text:'الشكل البيضاوي'} ],
     answer:2,
     explain:'المعيّن 🔷 لاتخاذ القرار، والمستطيل للعمليات، ومتوازي الأضلاع للإدخال والإخراج.' },
 
-  /* 17) مراحل إنشاء البرنامج */
+  /* 18) مراحل إنشاء البرنامج */
   { type:'cards', chip:'🪜 خطوة بخطوة', title:'مراحل إنشاء البرنامج', anim:'slide', cols:4,
     lead:'<div class="intro">ماذا تتوقعين؟ 🤔 اكشفي المراحل <b>بالترتيب</b>…</div>',
     cards:[
@@ -773,7 +782,7 @@ const SLIDES = [
     ],
     note:'💡 تحديد المشكلة يعني معرفة: ما <b>المدخلات</b>؟ ما <b>المخرجات</b>؟ وماذا يجب أن نفعل؟' },
 
-  /* 18) هيا نبرمج: تشغيل برنامج المساحة */
+  /* 19) هيا نبرمج: تشغيل برنامج المساحة */
   { type:'runner', chip:'▶ هيّا نبرمج', title:'برنامج حساب مساحة المستطيل', anim:'zoom',
     problem:'نريد برنامجًا يحسب مساحة المستطيل.', formula:'المساحة = الطول × العرض',
     file:'area.py',
@@ -788,28 +797,28 @@ const SLIDES = [
       { code:'print("مساحة المستطيل هي: ",area)', kind:'out', out:v => 'مساحة المستطيل هي: ' + v.area }
     ] },
 
-  /* 19) التعلم التعاوني: تدريب 1 */
+  /* 20) التعلم التعاوني: تدريب 1 */
   { type:'order', chip:'🤝 التعلم التعاوني', title:'تدريب 1: متوسط رقمين', anim:'slide',
     task:'مع مجموعتكِ 👭: رتّبن خطوات خوارزمية <b>حساب متوسط رقمين</b>، وشاهدن المخطط الانسيابي يُبنى أمامكن!',
     items:[ {text:'البداية', shape:'start'}, {text:'أدخل الرقمين', shape:'io'}, {text:'احسب متوسط الرقمين', shape:'proc'},
             {text:'اعرض النتيجة على الشاشة', shape:'io'}, {text:'النهاية', shape:'start'} ],
     success:'🌟 ممتاز! لاحظن: الإدخال والإخراج بشكل <b>متوازي الأضلاع</b>، والحساب بشكل <b>المستطيل</b>.' },
 
-  /* 20) سؤال */
+  /* 21) سؤال */
   { type:'mcq', chip:'❓ استراتيجية الأسئلة', title:'سؤال', anim:'zoom',
     question:'ماذا نسمّي الأداة التي تحوّل تعليمات اللغة عالية المستوى إلى لغة الآلة؟',
     options:[ {icon:'🖨️', text:'الطابعة'}, {icon:'⚙️', text:'المحول البرمجي (Compiler)'}, {icon:'📊', text:'المخطط الانسيابي'}, {icon:'🖱️', text:'الفأرة'} ],
     answer:1,
     explain:'المحول البرمجي (Compiler) يترجم البرنامج إلى لغة الآلة ليفهمه الحاسب.' },
 
-  /* 21) سؤال */
+  /* 22) سؤال */
   { type:'mcq', chip:'❓ استراتيجية الأسئلة', title:'سؤال', anim:'zoom',
     question:'في خوارزمية إعداد الطعام، ماذا تمثّل <u>المكوّنات</u>؟',
     options:[ {icon:'📥', text:'المدخلات'}, {icon:'⚙️', text:'الخوارزمية'}, {icon:'📤', text:'المخرجات'}, {icon:'🏁', text:'النهاية'} ],
     answer:0,
     explain:'المكوّنات = المدخلات 🥚، وإجراءات الطهي = الخوارزمية، والطبق = المخرجات 🥞' },
 
-  /* 22) صح أم خطأ */
+  /* 23) صح أم خطأ */
   { type:'tf', chip:'✅❌ صح أم خطأ', title:'صح أم خطأ؟', anim:'slide',
     items:[
       { text:'يستطيع الحاسب اتخاذ القرارات بنفسه دون تعليمات.', answer:false, fix:'خطأ: الحاسب يتبع تعليمات محددة جدًا.' },
@@ -818,14 +827,14 @@ const SLIDES = [
       { text:'يُستخدم المستطيل في المخطط الانسيابي لاتخاذ القرار.', answer:false, fix:'خطأ: المستطيل للعمليات، والمعيّن لاتخاذ القرار.' }
     ] },
 
-  /* 23) تحدي الدقيقة */
+  /* 24) تحدي الدقيقة */
   { type:'order', chip:'⏱️ تحدي الدقيقة', title:'تحدّي: الكيلومترات ← أميال', anim:'zoom', timer:60,
     task:'علمًا أن <b>الميل = 1.61 كيلومتر</b>. رتّبي أشكال المخطط الانسيابي قبل انتهاء الدقيقة! ⏱️',
     items:[ {text:'البداية', shape:'start'}, {text:'احصل على عدد الكيلومترات', shape:'io'}, {text:'الأميال = الكيلومترات ÷ 1.61', shape:'proc'},
             {text:'اعرض النتيجة', shape:'io'}, {text:'النهاية', shape:'start'} ],
     success:'🏆 بطلة التحدي! سؤال إضافي: لو أدخلنا 16.1 كم، فكم ميلًا؟ (الجواب: 10 أميال)' },
 
-  /* 24) المراجعة */
+  /* 25) المراجعة */
   { type:'cards', chip:'📚 مراجعة', title:'خلاصة الدرس', anim:'fade', cols:3,
     cards:[
       { front:'<div class="fe">💻</div>المقطع البرمجي', back:'أوامر مكتوبة بلغة برمجة<small>لتنفيذ مهمة محددة</small>' },
@@ -836,13 +845,13 @@ const SLIDES = [
       { front:'<div class="fe">🐍</div>بايثون', back:'لغة عالية المستوى<small>مفتوحة المصدر وسهلة التعلّم</small>' }
     ] },
 
-  /* 25) التقييم الفوري */
+  /* 26) التقييم الفوري */
   { type:'rating', chip:'⚡ التقييم الفوري', title:'كيف كان فهمكِ اليوم؟', anim:'slide',
     options:[ {emoji:'😍', label:'فهمتُ تمامًا'}, {emoji:'🙂', label:'فهمتُ أغلبه'}, {emoji:'🤔', label:'أحتاج مساعدة'} ],
     exitQ:'🎟️ تذكرة الخروج: اذكري مراحل إنشاء البرنامج الأربع بالترتيب',
     exitA:'1️⃣ تحديد المشكلة<br>2️⃣ كتابة الخوارزمية<br>3️⃣ رسم المخطط الانسيابي<br>4️⃣ كتابة البرنامج' },
 
-  /* 26) الختام */
+  /* 27) الختام */
   { type:'end', anim:'zoom',
     code:'print("أنتنّ مبرمجات المستقبل 💜")',
     output:'أنتنّ مبرمجات المستقبل 💜',
@@ -1050,39 +1059,35 @@ const RENDER = {
 
   /* ---------- العد التنازلي ---------- */
   countdown(b, c) {
-    const opts = c.minutes || [1, 3, 5];
-    let total = (c.start || opts[0]) * 60, left = total, id = null;
+    const total = c.seconds || 10; let left = total, id = null, goT = null;
     b.innerHTML = `<div class="cd">
-      <div class="hero-badge rv">💻 ${LESSON.subject} • ${LESSON.grade}</div>
-      <h1 class="cd-title rv">${LESSON.title}</h1>
-      <div class="hero-meta rv"><span>👩‍🏫 ${LESSON.teacher}</span></div>
+      <div class="cd-label rv">${c.label || ''}</div>
       <div class="cd-ring rv"><svg viewBox="0 0 200 200"><circle class="trk" cx="100" cy="100" r="88"/><circle class="bar js-bar" cx="100" cy="100" r="88"/></svg><div class="cd-num js-num"></div></div>
-      <div class="cd-bar rv">${opts.map(m => `<button class="btn btn-ghost sm js-m" data-m="${m}">${m} د</button>`).join('')}
-        <button class="btn btn-primary js-go">▶ ابدئي</button><button class="btn btn-ghost js-rst">↺</button></div>
+      <div class="rocket rv js-rocket"><span>🚀</span></div>
     </div>`;
-    const C = 2 * Math.PI * 88, bar = $('.js-bar', b), num = $('.js-num', b), go = $('.js-go', b);
+    const C = 2 * Math.PI * 88, bar = $('.js-bar', b), num = $('.js-num', b), rocket = $('.js-rocket', b);
     bar.style.strokeDasharray = C;
     const show = () => {
-      num.textContent = left > 0 ? fmt(left) : '🚀';
+      num.textContent = left > 0 ? left : 'انطلقي!';
       bar.style.strokeDashoffset = C * (1 - left / total);
-      num.classList.toggle('warn', left > 0 && left <= 10);
-      $$('.js-m', b).forEach(x => x.classList.toggle('on', +x.dataset.m * 60 === total));
+      num.classList.toggle('warn', left > 0 && left <= 3);
+      num.classList.toggle('go', left <= 0);
+      rocket.classList.toggle('shake', left > 0 && left <= 3);
     };
-    const stop = label => { clearInterval(id); id = null; go.textContent = label; };
     const tick = () => {
       left--; show();
-      if (left > 0 && left <= 10) SFX.tick();
-      if (left <= 0) { stop('▶ ابدئي'); SFX.bell(); confetti(120); toast('🚀 لنبدأ الدرس!', 'ok'); }
+      if (left > 0) { SFX.tick(); return; }
+      clearInterval(id); id = null;
+      rocket.classList.add('launch'); SFX.success(); confetti(120);
+      const me = slides.findIndex(s => s.el.contains(b));
+      goT = setTimeout(() => { if (cur === me) next(); }, 1600);
     };
-    go.onclick = () => {
-      if (id) { stop('▶ استئناف'); return; }
-      if (left <= 0) left = total;
-      show(); id = setInterval(tick, 1000); go.textContent = '⏸ إيقاف'; SFX.pop();
+    const reset = () => { clearInterval(id); clearTimeout(goT); id = null; left = total; rocket.classList.remove('launch'); show(); };
+    reset();
+    return {
+      onEnter() { reset(); id = setInterval(tick, 1000); },
+      onLeave: reset
     };
-    $$('.js-m', b).forEach(x => (x.onclick = () => { stop('▶ ابدئي'); total = left = +x.dataset.m * 60; show(); SFX.pop(); }));
-    $('.js-rst', b).onclick = () => { stop('▶ ابدئي'); left = total; show(); SFX.pop(); };
-    show();
-    return { onLeave() { if (id) stop('▶ استئناف'); } };
   },
 
   /* ---------- النشيد الوطني ---------- */
